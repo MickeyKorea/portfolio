@@ -65,7 +65,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 const controls = new OrbitControls(camera, canvas);
 // Block user control
 // controls.enabled = false;
-// controls.enableZoom = false;
+controls.enableZoom = false;
 
 controls.enableDamping = true; // for smoother controls
 controls.dampingFactor = 0.02;
