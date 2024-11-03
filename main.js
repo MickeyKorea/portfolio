@@ -65,6 +65,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 const controls = new OrbitControls(camera, canvas);
 // Block user control
 // controls.enabled = false;
+// controls.enableZoom = false;
 
 controls.enableDamping = true; // for smoother controls
 controls.dampingFactor = 0.02;
@@ -108,18 +109,18 @@ fontLoader.load(
         const nameGeometry = new TextGeometry('Mickey Oh', {
             font: font,
             size: 0.6,
-            depth: 0.001,
+            depth: 0.02,
             curveSegments: 12,
             bevelEnabled: true,
             bevelThickness: 0.001,
             bevelSize: 0.001,
             bevelOffset: 0,
             bevelSegments: 1,
-            letterSpacing: -1
+            letterSpacing: -10
         });
 
         const textMaterial = new THREE.MeshStandardMaterial({
-            color: 0x000000,
+            color: 0x4b4b4b,
             roughness: 0.5,
             metalness: 0,
         });
@@ -136,7 +137,6 @@ fontLoader.load(
 
         nameMesh.position.x = -nameWidth / 2 + nameWidth;
         nameMesh.position.y = -nameHeight / 2;
-        // nameMesh.position.y = -0.65;
 
         scene.add(nameMesh);
 
@@ -147,7 +147,7 @@ fontLoader.load(
                 const subtitleGeometry = new TextGeometry('Creative Technologist', {
                     font: subtitleFont,
                     size: 0.25,
-                    depth: 0.001,
+                    depth: 0.01,
                     curveSegments: 12,
                     bevelEnabled: true,
                     bevelThickness: 0.001,
@@ -223,16 +223,31 @@ const update = () => {
         camera.position.z = -7 + (1.5 * progress);
     }
 
+    // const FLICKER_SETTINGS = {
+    //     baseIntensity: 2,
+    //     flickerRange: 0.2,
+    //     flickerChance: 0.05 // 5% chance of flicker per frame
+    // };
+
     // Animate light intensity
     if (!isLightAnimationComplete) {
         const progress = Math.min(elapsedTime / lightAnimationDuration, 1);
         rectAreaLight.intensity = intensity * progress;
-        //console.log(rectAreaLight.intensity);
 
         if (progress === 1) {
             isLightAnimationComplete = true;
         }
     }
+    // } else {
+    //     if (Math.random() < FLICKER_SETTINGS.flickerChance) {
+    //         // When flicker occurs, reduce intensity by a random amount
+    //         const flickerAmount = Math.random() * FLICKER_SETTINGS.flickerRange;
+    //         rectAreaLight.intensity = FLICKER_SETTINGS.baseIntensity - flickerAmount;
+    //     } else {
+    //         // Most of the time, maintain base intensity
+    //         rectAreaLight.intensity = FLICKER_SETTINGS.baseIntensity;
+    //     }
+    // }
 
     // Handle FOV transition
     if (isTransitioning) {
