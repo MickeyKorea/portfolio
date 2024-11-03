@@ -1,6 +1,6 @@
 THREE.ColorManagement.enabled = true;
 const fontLoader = new FontLoader();
-const turn_gui = true;
+const turn_gui = false;
 
 const canvas = document.querySelector("canvas");
 const scene = new THREE.Scene();
