@@ -139,7 +139,7 @@ const textMaterial = new THREE.MeshStandardMaterial({
 
 // My Name
 fontLoader.load(
-    './fonts/helvetiker-bold.json',
+    './fonts/sfpro-bold.json',
     (font) => {
         const nameGeometry = new TextGeometry('Mickey Oh', {
             font: font,
@@ -173,7 +173,7 @@ fontLoader.load(
 
 // Subtitle
 fontLoader.load(
-    './fonts/helvetiker-regular.json',
+    './fonts/sfpro-regular.json',
     (subtitleFont) => {
         const subtitleGeometry = new TextGeometry('Creative Technologist', {
             font: subtitleFont,
@@ -200,7 +200,7 @@ fontLoader.load(
 
         subtitleMesh.position.x = -subtitleWidth / 2 + subtitleWidth;
         subtitleMesh.position.y = -subtitleHeight / 2;
-        subtitleMesh.position.z = 1.1;
+        subtitleMesh.position.z = 1;
 
         scene.add(subtitleMesh);
     }
