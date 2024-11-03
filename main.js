@@ -1,6 +1,6 @@
 THREE.ColorManagement.enabled = true;
 const fontLoader = new FontLoader();
-const turn_gui = false;
+const turn_gui = true;
 
 const canvas = document.querySelector("canvas");
 const scene = new THREE.Scene();
@@ -65,11 +65,40 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 const controls = new OrbitControls(camera, canvas);
 // Block user control
 // controls.enabled = false;
+
+// Block zoom, scroll up and down and horizontal rotation
 controls.enableZoom = false;
+controls.minAzimuthAngle = Math.PI - Math.PI / 4;
+controls.maxAzimuthAngle = Math.PI + Math.PI / 4;
+controls.minPolarAngle = Math.PI / 3; // 60 degrees
+controls.maxPolarAngle = Math.PI / 2.5;
+
 
 controls.enableDamping = true; // for smoother controls
 controls.dampingFactor = 0.02;
-controls.enablePan = false; // disable panning
+controls.enableDamping = true;
+
+// Inertia force - Reset the camera position after a while
+let lastInteractionTime = Date.now();
+let isResetting = false;
+const resetDelay = 1000; // 1 second
+const resetDuration = 1000; // 1 second for smooth reset
+let resetStartTime;
+let resetStartPosition = new THREE.Vector3();
+let resetStartTarget = new THREE.Vector3();
+let initialAnimationComplete = false;
+// Initial camera position and target
+const initialCameraPosition = new THREE.Vector3(0, 4, -5.5);
+const initialTarget = new THREE.Vector3(0, 0, 0);
+
+controls.addEventListener('start', () => {
+    lastInteractionTime = Date.now();
+    isResetting = false;
+});
+
+controls.addEventListener('end', () => {
+    lastInteractionTime = Date.now();
+});
 
 const material = new THREE.MeshStandardMaterial({
     roughness: 0.5,
@@ -102,6 +131,12 @@ torus.position.x = 2;
 //     scene.add(shape);
 // });
 
+const textMaterial = new THREE.MeshStandardMaterial({
+    color: 0x4b4b4b,
+    roughness: 0.5,
+    metalness: 0,
+});
+
 // My Name
 fontLoader.load(
     './fonts/helvetiker-bold.json',
@@ -119,12 +154,6 @@ fontLoader.load(
             letterSpacing: -10
         });
 
-        const textMaterial = new THREE.MeshStandardMaterial({
-            color: 0x4b4b4b,
-            roughness: 0.5,
-            metalness: 0,
-        });
-
         const nameMesh = new THREE.Mesh(nameGeometry, textMaterial);
 
         // Center the text
@@ -140,39 +169,41 @@ fontLoader.load(
 
         scene.add(nameMesh);
 
-        // Subtitle
-        fontLoader.load(
-            './fonts/helvetiker-regular.json',
-            (subtitleFont) => {
-                const subtitleGeometry = new TextGeometry('Creative Technologist', {
-                    font: subtitleFont,
-                    size: 0.25,
-                    depth: 0.01,
-                    curveSegments: 12,
-                    bevelEnabled: true,
-                    bevelThickness: 0.001,
-                    bevelSize: 0.001,
-                    bevelOffset: 0,
-                    bevelSegments: 1,
-                    letterSpacing: -0.02
-                });
+        window.nameHeight = nameHeight;
+    }
+);
 
-                const subtitleMesh = new THREE.Mesh(subtitleGeometry, textMaterial);
+// Subtitle
+fontLoader.load(
+    './fonts/helvetiker-regular.json',
+    (subtitleFont) => {
+        const subtitleGeometry = new TextGeometry('Creative Technologist', {
+            font: subtitleFont,
+            size: 0.25,
+            depth: 0.01,
+            curveSegments: 12,
+            bevelEnabled: true,
+            bevelThickness: 0.001,
+            bevelSize: 0.001,
+            bevelOffset: 0,
+            bevelSegments: 1,
+            letterSpacing: -0.02
+        });
 
-                // Center the subtitle
-                subtitleGeometry.computeBoundingBox();
-                const subtitleWidth = subtitleGeometry.boundingBox.max.x - subtitleGeometry.boundingBox.min.x;
+        const subtitleMesh = new THREE.Mesh(subtitleGeometry, textMaterial);
 
-                subtitleMesh.rotation.y = Math.PI;
-                subtitleMesh.rotation.x = Math.PI / 2.5;
+        // Center the subtitle
+        subtitleGeometry.computeBoundingBox();
+        const subtitleWidth = subtitleGeometry.boundingBox.max.x - subtitleGeometry.boundingBox.min.x;
 
-                subtitleMesh.position.x = -subtitleWidth / 2 + subtitleWidth;
-                subtitleMesh.position.y = -nameHeight / 2;
-                subtitleMesh.position.z = 1.3;
+        subtitleMesh.rotation.y = Math.PI;
+        subtitleMesh.rotation.x = Math.PI / 2.5;
 
-                scene.add(subtitleMesh);
-            }
-        );
+        subtitleMesh.position.x = -subtitleWidth / 2 + subtitleWidth;
+        subtitleMesh.position.y = -nameHeight / 2;
+        subtitleMesh.position.z = 1.3;
+
+        scene.add(subtitleMesh);
     }
 );
 
@@ -210,9 +241,12 @@ fontLoader.load(
 
 const clock = new THREE.Clock();
 
-// Light animation
+// Light intensity animation
 let isLightAnimationComplete = false;
 const lightAnimationDuration = 2;
+
+// Camera position animation
+// let initialAnimationComplete = false;
 
 const update = () => {
     const elapsedTime = clock.getElapsedTime();
@@ -220,7 +254,42 @@ const update = () => {
     //Camera position animation
     if (elapsedTime <= 1.3) {
         const progress = Math.min(elapsedTime / 1.3, 1);
-        camera.position.z = -7 + (1.5 * progress);
+        camera.position.z = -7 + (1.3 * progress);
+    } else if (!initialAnimationComplete) {
+        initialAnimationComplete = true;
+        console.log('initialAnimationComplete');
+    }
+
+    // Inertia force - Reset the camera position after a while
+    if (initialAnimationComplete) {
+        if (!isResetting && Date.now() - lastInteractionTime > resetDelay) {
+            isResetting = true;
+            resetStartTime = Date.now();
+            resetStartPosition.copy(camera.position);
+            resetStartTarget.copy(controls.target);
+        }
+        if (isResetting) {
+            const resetProgress = Math.min((Date.now() - resetStartTime) / resetDuration, 1);
+            const easeProgress = easeOutCubic(resetProgress);
+
+            camera.position.lerpVectors(
+                resetStartPosition,
+                initialCameraPosition,
+                easeProgress
+            );
+
+            controls.target.lerpVectors(
+                resetStartTarget,
+                initialTarget,
+                easeProgress
+            );
+
+            controls.update();
+
+            if (resetProgress === 1) {
+                isResetting = false;
+            }
+        }
     }
 
     // const FLICKER_SETTINGS = {
@@ -275,6 +344,10 @@ const update = () => {
 };
 
 update();
+
+function easeOutCubic(x) {
+    return 1 - Math.pow(1 - x, 3);
+}
 
 function responsiveCamera() {
     const isMobile = window.innerWidth <= 768;
