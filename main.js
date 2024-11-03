@@ -64,7 +64,11 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 const controls = new OrbitControls(camera, canvas);
 // Block user control
-controls.enabled = false;
+// controls.enabled = false;
+
+controls.enableDamping = true; // for smoother controls
+controls.dampingFactor = 0.02;
+controls.enablePan = false; // disable panning
 
 const material = new THREE.MeshStandardMaterial({
     roughness: 0.5,
@@ -298,7 +302,7 @@ responsiveCamera()
 
 if (turn_gui) {
     const gui = new GUI();
-    gui.close()
+    // gui.close()
 
     // Camera GUI
     const cameraFolder = gui.addFolder("Camera");
