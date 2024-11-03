@@ -168,8 +168,6 @@ fontLoader.load(
         nameMesh.position.y = -nameHeight / 2;
 
         scene.add(nameMesh);
-
-        window.nameHeight = nameHeight;
     }
 );
 
@@ -195,13 +193,14 @@ fontLoader.load(
         // Center the subtitle
         subtitleGeometry.computeBoundingBox();
         const subtitleWidth = subtitleGeometry.boundingBox.max.x - subtitleGeometry.boundingBox.min.x;
+        const subtitleHeight = subtitleGeometry.boundingBox.max.y - subtitleGeometry.boundingBox.min.y;
 
         subtitleMesh.rotation.y = Math.PI;
         subtitleMesh.rotation.x = Math.PI / 2.5;
 
         subtitleMesh.position.x = -subtitleWidth / 2 + subtitleWidth;
-        subtitleMesh.position.y = -nameHeight / 2;
-        subtitleMesh.position.z = 1.3;
+        subtitleMesh.position.y = -subtitleHeight / 2;
+        subtitleMesh.position.z = 1.1;
 
         scene.add(subtitleMesh);
     }
@@ -257,7 +256,7 @@ const update = () => {
         camera.position.z = -7 + (1.3 * progress);
     } else if (!initialAnimationComplete) {
         initialAnimationComplete = true;
-        console.log('initialAnimationComplete');
+        //console.log('initialAnimationComplete');
     }
 
     // Inertia force - Reset the camera position after a while
