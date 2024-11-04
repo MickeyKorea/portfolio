@@ -139,7 +139,8 @@ const textMaterial = new THREE.MeshStandardMaterial({
 
 // My Name
 fontLoader.load(
-    './fonts/sfpro-bold.json',
+    // './fonts/sfpro-bold.json',
+    'https://mickeykorea.github.io/portfolio/fonts/sfpro-bold.json',
     (font) => {
         const nameGeometry = new TextGeometry('Mickey Oh', {
             font: font,
@@ -173,7 +174,8 @@ fontLoader.load(
 
 // Subtitle
 fontLoader.load(
-    './fonts/sfpro-regular.json',
+    // './fonts/sfpro-regular.json',
+    'https://mickeykorea.github.io/portfolio/fonts/sfpro-regular.json',
     (subtitleFont) => {
         const subtitleGeometry = new TextGeometry('Creative Technologist', {
             font: subtitleFont,
