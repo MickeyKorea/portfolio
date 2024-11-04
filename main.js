@@ -54,6 +54,24 @@ rectAreaLight.rotation.x = -0.8;
 const rectAreaLightHelper = new RectAreaLightHelper(rectAreaLight);
 scene.add(rectAreaLight, rectAreaLightHelper);
 
+// Glow Effect
+// const texture = new THREE.TextureLoader().load('./textures/glow.png');
+// const glowGeometry = new THREE.PlaneGeometry(width * 1.2, height * 1.2);
+// const glowMaterial = new THREE.MeshBasicMaterial({
+//     color: 0xffffff,
+//     side: THREE.DoubleSide,
+//     map: texture,
+//     depthTest: false,
+//     blending: THREE.AdditiveBlending,
+//     // opacity: 0.7
+// });
+// const glowPlane = new THREE.Mesh(glowGeometry, glowMaterial);
+// glowPlane.position.copy(rectAreaLight.position);
+// glowPlane.rotation.copy(rectAreaLight.rotation);
+// glowPlane.position.z -= 0.01;
+
+// scene.add(glowPlane);
+
 // const ambientLight = new THREE.AmbientLight(0x404040, 0);
 // scene.add(ambientLight);
 
@@ -72,7 +90,6 @@ controls.minAzimuthAngle = Math.PI - Math.PI / 4;
 controls.maxAzimuthAngle = Math.PI + Math.PI / 4;
 controls.minPolarAngle = Math.PI / 3; // 60 degrees
 controls.maxPolarAngle = Math.PI / 2.5;
-
 
 controls.enableDamping = true; // for smoother controls
 controls.dampingFactor = 0.02;
