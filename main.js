@@ -28,6 +28,8 @@ const camera = new THREE.PerspectiveCamera(
     0.1,
     1000,
 );
+camera.zoom = 1.5;  // Add this line
+camera.updateProjectionMatrix();
 
 camera.position.set(0, 4, -5.5);
 scene.add(camera);
