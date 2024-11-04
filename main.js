@@ -1,6 +1,6 @@
 THREE.ColorManagement.enabled = true;
 const fontLoader = new FontLoader();
-const turn_gui = true;
+const turn_gui = false;
 
 const canvas = document.querySelector("canvas");
 const scene = new THREE.Scene();
@@ -33,28 +33,29 @@ camera.position.set(0, 4, -5.5);
 scene.add(camera);
 
 // RectLight
-const darkmode = 0xf7fbff;
+const darkmode = 0xffffff;
 const lightmode = 0xfeffb5;
 
 const intensity = 2;
 const width = 6;
-const height = 2;
+const height = 2.85;
 const rectAreaLight = new THREE.RectAreaLight(
     darkmode,
-    0, // intensity starts from 0
+    2, // intensity starts from 0
     width,
     height,
 );
+rectAreaLight.height = 0;
 
 // Default position
-rectAreaLight.position.y = 2;
+rectAreaLight.position.y = -0.65;
 rectAreaLight.position.z = 2;
 rectAreaLight.rotation.x = -0.8;
 
 const rectAreaLightHelper = new RectAreaLightHelper(rectAreaLight);
 scene.add(rectAreaLight, rectAreaLightHelper);
 
-// Glow Effect
+//Glow Effect
 // const texture = new THREE.TextureLoader().load('./textures/glow.png');
 // const glowGeometry = new THREE.PlaneGeometry(width * 1.2, height * 1.2);
 // const glowMaterial = new THREE.MeshBasicMaterial({
@@ -263,6 +264,9 @@ const clock = new THREE.Clock();
 let isLightAnimationComplete = false;
 const lightAnimationDuration = 2;
 
+let initialAnimationEndTime = 0;
+const initialResetDelay = 1000;
+
 // Camera position animation
 // let initialAnimationComplete = false;
 
@@ -275,6 +279,7 @@ const update = () => {
         camera.position.z = -7 + (1.3 * progress);
     } else if (!initialAnimationComplete) {
         initialAnimationComplete = true;
+        initialCameraPosition.copy(camera.position);
         //console.log('initialAnimationComplete');
     }
 
@@ -317,14 +322,27 @@ const update = () => {
     // };
 
     // Animate light intensity
+    // if (!isLightAnimationComplete) {
+    //     const progress = Math.min(elapsedTime / lightAnimationDuration, 1);
+    //     const startIntensity = 1.3;
+    //     rectAreaLight.intensity = startIntensity + (intensity - startIntensity) * progress;
+
+    //     if (progress === 1) {
+    //         isLightAnimationComplete = true;
+    //     }
+    // }
+
+    // Animate light height
     if (!isLightAnimationComplete) {
         const progress = Math.min(elapsedTime / lightAnimationDuration, 1);
-        rectAreaLight.intensity = intensity * progress;
+        const startHeight = 0;
+        rectAreaLight.height = startHeight + (height - startHeight) * progress;
 
         if (progress === 1) {
             isLightAnimationComplete = true;
         }
     }
+
     // } else {
     //     if (Math.random() < FLICKER_SETTINGS.flickerChance) {
     //         // When flicker occurs, reduce intensity by a random amount
