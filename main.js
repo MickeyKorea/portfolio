@@ -369,6 +369,7 @@ function easeOutCubic(x) {
 
 function responsiveCamera() {
     const isMobile = window.innerWidth <= 768;
+    controls.enabled = !isMobile;
 
     // // Adjust camera for mobile screens
     // if (isMobile) {
