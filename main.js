@@ -1,6 +1,7 @@
 THREE.ColorManagement.enabled = true;
 const fontLoader = new FontLoader();
 const turn_gui = false;
+const y_offset = 0.6;
 
 const canvas = document.querySelector("canvas");
 const scene = new THREE.Scene();
@@ -28,7 +29,7 @@ const camera = new THREE.PerspectiveCamera(
     0.1,
     1000,
 );
-camera.zoom = 1.2;
+camera.zoom = 1.1;
 camera.updateProjectionMatrix();
 
 camera.position.set(0, 4, -5.5);
@@ -38,19 +39,19 @@ scene.add(camera);
 const darkmode = 0xffffff;
 const lightmode = 0xfeffb5;
 
-const intensity = 2;
+const intensity = 1.7;
 const width = 6;
 const height = 2.85;
 const rectAreaLight = new THREE.RectAreaLight(
     darkmode,
-    2, // intensity starts from 0
+    1.7, // intensity starts from 0
     width,
     height,
 );
 rectAreaLight.height = 0;
 
 // Default position
-rectAreaLight.position.y = -0.65;
+rectAreaLight.position.y = -0.65 + y_offset;
 rectAreaLight.position.z = 2;
 rectAreaLight.rotation.x = -0.8;
 
@@ -128,7 +129,7 @@ const material = new THREE.MeshStandardMaterial({
 // Floor
 const plane = new THREE.Mesh(new THREE.PlaneGeometry(15, 15), material);
 plane.rotation.x = -Math.PI * 0.5;
-plane.position.y = -0.65;
+plane.position.y = -0.65 + y_offset;
 plane.color = new THREE.Color(0x171616);
 
 scene.add(plane);
@@ -186,7 +187,7 @@ fontLoader.load(
         nameMesh.rotation.x = Math.PI / 2.5;
 
         nameMesh.position.x = -nameWidth / 2 + nameWidth;
-        nameMesh.position.y = -nameHeight / 2;
+        nameMesh.position.y = -nameHeight / 2 + y_offset;
 
         scene.add(nameMesh);
     }
@@ -221,7 +222,7 @@ fontLoader.load(
         subtitleMesh.rotation.x = Math.PI / 2.5;
 
         subtitleMesh.position.x = -subtitleWidth / 2 + subtitleWidth;
-        subtitleMesh.position.y = -subtitleHeight / 2;
+        subtitleMesh.position.y = -subtitleHeight / 2 + y_offset;
         subtitleMesh.position.z = 1;
 
         scene.add(subtitleMesh);
