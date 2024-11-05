@@ -85,6 +85,7 @@ renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 const controls = new OrbitControls(camera, canvas);
+canvas.style.touchAction = 'pan-y';
 // Block user control
 // controls.enabled = false;
 
@@ -409,7 +410,16 @@ function updateYPositions() {
 
 function responsiveCamera() {
     const isMobile = window.innerWidth <= 768;
-    controls.enabled = !isMobile;
+    // controls.enabled = !isMobile;
+    if (isMobile) {
+        controls.enabled = false;
+        canvas.style.touchAction = 'pan-y';
+        canvas.style.userSelect = 'auto';
+    } else {
+        controls.enabled = true;
+        canvas.style.touchAction = 'none';
+        canvas.style.userSelect = 'none';
+    }
 
     // Adjust y_offset based on device
     y_offset = isMobile ? 1.2 : 0.6;
@@ -441,6 +451,10 @@ window.addEventListener("resize", () => {
     renderer.setSize(sizes.width, sizes.height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
+
+canvas.addEventListener('touchmove', (e) => {
+    e.stopPropagation();
+}, { passive: false });
 
 responsiveCamera()
 
