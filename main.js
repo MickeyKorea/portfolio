@@ -1,7 +1,7 @@
 THREE.ColorManagement.enabled = true;
 const fontLoader = new FontLoader();
 const turn_gui = false;
-const y_offset = 0.6;
+let y_offset = 0.6;
 
 const canvas = document.querySelector("canvas");
 const scene = new THREE.Scene();
@@ -158,6 +158,8 @@ const textMaterial = new THREE.MeshStandardMaterial({
     metalness: 0,
 });
 
+let nameMesh, subtitleMesh;
+
 // My Name
 fontLoader.load(
     // './fonts/sfpro-bold.json',
@@ -176,7 +178,7 @@ fontLoader.load(
             letterSpacing: -10
         });
 
-        const nameMesh = new THREE.Mesh(nameGeometry, textMaterial);
+        nameMesh = new THREE.Mesh(nameGeometry, textMaterial);
 
         // Center the text
         nameGeometry.computeBoundingBox();
@@ -190,6 +192,7 @@ fontLoader.load(
         nameMesh.position.y = -nameHeight / 2 + y_offset;
 
         scene.add(nameMesh);
+        updateYPositions();
     }
 );
 
@@ -211,7 +214,7 @@ fontLoader.load(
             letterSpacing: -0.02
         });
 
-        const subtitleMesh = new THREE.Mesh(subtitleGeometry, textMaterial);
+        subtitleMesh = new THREE.Mesh(subtitleGeometry, textMaterial);
 
         // Center the subtitle
         subtitleGeometry.computeBoundingBox();
@@ -226,6 +229,7 @@ fontLoader.load(
         subtitleMesh.position.z = 1;
 
         scene.add(subtitleMesh);
+        updateYPositions();
     }
 );
 
@@ -388,16 +392,28 @@ function easeOutCubic(x) {
     return 1 - Math.pow(1 - x, 3);
 }
 
+function updateYPositions() {
+    plane.position.y = -0.65 + y_offset;
+    rectAreaLight.position.y = -0.65 + y_offset;
+
+    if (nameMesh) {
+        const nameHeight = nameMesh.geometry.boundingBox.max.y - nameMesh.geometry.boundingBox.min.y;
+        nameMesh.position.y = -nameHeight / 2 + y_offset;
+    }
+
+    if (subtitleMesh) {
+        const subtitleHeight = subtitleMesh.geometry.boundingBox.max.y - subtitleMesh.geometry.boundingBox.min.y;
+        subtitleMesh.position.y = -subtitleHeight / 2 + y_offset;
+    }
+}
+
 function responsiveCamera() {
     const isMobile = window.innerWidth <= 768;
     controls.enabled = !isMobile;
 
-    // // Adjust camera for mobile screens
-    // if (isMobile) {
-    //     camera.fov = 100;
-    // } else {
-    //     camera.fov = 70;
-    // }
+    // Adjust y_offset based on device
+    y_offset = isMobile ? 1.2 : 0.6;
+    updateYPositions();
 
     // Set target FOV based on device
     const newTargetFov = isMobile ? FOV_SETTINGS.mobile : FOV_SETTINGS.desktop;
