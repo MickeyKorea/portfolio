@@ -187,7 +187,7 @@ fontLoader.load(
         const nameHeight = nameGeometry.boundingBox.max.y - nameGeometry.boundingBox.min.y;
 
         nameMesh.rotation.y = Math.PI;
-        nameMesh.rotation.x = Math.PI / 2.5;
+        nameMesh.rotation.x = Math.PI / 2.7;
 
         nameMesh.position.x = -nameWidth / 2 + nameWidth;
         nameMesh.position.y = -nameHeight / 2 + y_offset;
@@ -223,7 +223,7 @@ fontLoader.load(
         const subtitleHeight = subtitleGeometry.boundingBox.max.y - subtitleGeometry.boundingBox.min.y;
 
         subtitleMesh.rotation.y = Math.PI;
-        subtitleMesh.rotation.x = Math.PI / 2.5;
+        subtitleMesh.rotation.x = Math.PI / 2.7;
 
         subtitleMesh.position.x = -subtitleWidth / 2 + subtitleWidth;
         subtitleMesh.position.y = -subtitleHeight / 2 + y_offset;
