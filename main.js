@@ -13,18 +13,18 @@ const sizes = {
 };
 
 const FOV_SETTINGS = {
-    mobile: 90,
-    desktop: 70,
+    mobile: 85,
+    desktop: 65,
     transitionDuration: 0.2, // seconds
 };
 
-let targetFov = 70; // Initial FOV
+let targetFov = 65; // Initial FOV
 let isTransitioning = false;
 let transitionStartTime = 0;
-let startFov = 70;
+let startFov = 65;
 
 const camera = new THREE.PerspectiveCamera(
-    70,
+    65,
     sizes.width / sizes.height,
     0.1,
     1000,
