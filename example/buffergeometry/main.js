@@ -59,6 +59,7 @@ function init() {
     controls.maxDistance = 3000;
     controls.enableDamping = true;
     controls.dampingFactor = 0.02;
+    controls.enableZoom = false;
     container.style.touchAction = 'pan-y';
 
     responsiveControls();
