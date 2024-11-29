@@ -51,7 +51,7 @@ function init() {
     container = document.getElementById("container");
 
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 4000);
-    camera.position.z = 2200;
+    camera.position.z = 1800;
 
     // const controls = new OrbitControls(camera, container);
     // controls.minDistance = 1000;
