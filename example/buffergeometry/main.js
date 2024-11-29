@@ -1,5 +1,6 @@
 // import Stats from "three/addons/libs/stats.module.js";
 // import { GUI } from "three/addons/libs/lil-gui.module.min.js";
+let controls;
 
 let group;
 let container, stats;
@@ -53,9 +54,14 @@ function init() {
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 4000);
     camera.position.z = 1800;
 
-    // const controls = new OrbitControls(camera, container);
-    // controls.minDistance = 1000;
-    // controls.maxDistance = 3000;
+    const controls = new OrbitControls(camera, container);
+    controls.minDistance = 1000;
+    controls.maxDistance = 3000;
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.02;
+    container.style.touchAction = 'pan-y';
+
+    responsiveControls();
 
     scene = new THREE.Scene();
 
@@ -140,11 +146,26 @@ function init() {
     window.addEventListener("resize", onWindowResize);
 }
 
+function responsiveControls() {
+    const isMobile = window.innerWidth <= 768;
+
+    if (isMobile) {
+        controls.enabled = false;
+        container.style.touchAction = 'pan-y';
+        container.style.userSelect = 'auto';
+    } else {
+        controls.enabled = true;
+        container.style.touchAction = 'none';
+        container.style.userSelect = 'none';
+    }
+}
+
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-
     renderer.setSize(window.innerWidth, window.innerHeight);
+
+    responsiveControls();
 }
 
 function animate() {
@@ -218,6 +239,10 @@ function animate() {
 
     pointCloud.geometry.attributes.position.needsUpdate = true;
 
+    if (controls.enabled) {
+        controls.update();
+    }
+
     render();
 
     //stats.update();
@@ -229,3 +254,7 @@ function render() {
     group.rotation.y = time * 0.1;
     renderer.render(scene, camera);
 }
+
+container.addEventListener('touchmove', (e) => {
+    e.stopPropagation();
+}, { passive: false });
